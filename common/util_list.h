@@ -1,7 +1,4 @@
-// using GCC extensions
-
-#ifndef        UTIL_LIST_H_
-#define        UTIL_LIST_H_
+#pragma once
 
 #include    <stddef.h>
 #include    "./miscutils.h"
@@ -77,5 +74,3 @@ int list_is_empty(struct link_index *h) {
 #define     detach_current_iterator                 list_del(iterator)
 #define     current_object_of_type(type, member) \
     container_of(iterator, type, member)
-
-#endif        // UTIL_LIST_H_
