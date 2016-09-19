@@ -31,8 +31,8 @@ struct link_index *cp_queue_consume(struct cp_queue *queue) {
     uint8_t index_consumer = consumer_index_of(queue);
     return
         list_is_empty(&(queue->buffers[index_consumer])) ?
-            &(queue->buffers[index_consumer]) :
-            &(queue->buffers[new_consumer_index_of(queue)]);
+            &(queue->buffers[new_consumer_index_of(queue)]) :
+            &(queue->buffers[index_consumer]);
 }
 
 static inline
