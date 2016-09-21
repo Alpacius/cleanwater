@@ -1,6 +1,7 @@
 #pragma once
 
 #include    "./stdc_common.h"
+#include    "./linux_common.h"
 #include    "../common/util_list.h"
 
 /*
@@ -20,6 +21,10 @@ struct clwater_async_result {
         double numeric;
     } value;
     int status;
+    struct {
+        pthread_cond_t cond;
+        pthread_mutex_t mutex;
+    } sync;
     struct link_index recollectable;
 };
 
@@ -63,6 +68,8 @@ int clwater_async_result_poll(struct clwater_async_result *result) {
 static inline
 struct clwater_async_result *clwater_async_result_init(struct clwater_async_result *result) {
     __atomic_store_n(&(result->status), ASYNC_RESULT_PENDING, __ATOMIC_RELEASE);
+    result->sync.mutex = PTHREAD_MUTEX_INITIALIZER;
+    result->sync.cond = PTHREAD_COND_INITIALIZER;
 }
 
 static inline
