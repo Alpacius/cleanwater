@@ -18,3 +18,11 @@ struct clwater_sync_task_queue {
 #define     ASYNC_QUEUE_READY       0
 #define     ASYNC_QUEUE_INACTIVE    1
 #define     ASYNC_QUEUE_PENDING     2
+
+
+struct clwater_sync_task_queue *clwater_sync_task_queue_init(struct clwater_sync_task_queue *queue);
+struct clwater_sync_task_queue *clwater_sync_task_queue_ruin(struct clwater_sync_task_queue *queue);
+struct link_index *clwater_sync_task_queue_dequeue(struct clwater_sync_task_queue *queue);
+void clwater_sync_task_queue_enqueue(struct clwater_sync_task_queue *queue, struct link_index *product);
+struct clwater_sync_task_queue *clwater_sync_task_queue_new(void);
+void clwater_sync_task_queue_delete(struct clwater_sync_task_queue *queue);
