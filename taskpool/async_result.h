@@ -22,8 +22,7 @@ struct clwater_async_result {
     } value;
     int status;
     struct {
-        pthread_cond_t cond;
-        pthread_mutex_t mutex;
+        sem_t semaphore;
     } sync;
     struct link_index recollectable;
 };
