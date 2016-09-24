@@ -3,23 +3,22 @@
 
 #include    "./stdc_common.h"
 #include    "./linux_common.h"
-
 #include    "../common/util_list.h"
 #include    "../common/cp_queue.h"
 #include    "../common/recollectable.h"
+#include    "./sync_task_queue.h"
 
 
-struct thread_worker_posix {
+struct clwater_thread_worker {
     struct {
         pthread_t thread;
         void (*lifespan)(void *);
         void *container_reference;
     } base;
     struct {
-        struct cp_queue *queue;
+        struct clwater_sync_task_queue queue;
         struct {
-            pthread_cond_t cond;
-            pthread_mutex_t mutex;
+            sem_t semaphore;
         } sync;
     } tasks;
     struct clwater_recollector recollector;
