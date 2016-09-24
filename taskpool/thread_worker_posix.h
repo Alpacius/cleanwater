@@ -14,6 +14,7 @@ struct clwater_thread_worker {
         pthread_t thread;
         void (*lifespan)(void *);
         void *container_reference;
+        ucontext_t ucontext;
     } base;
     struct {
         struct clwater_sync_task_queue queue;
