@@ -2,18 +2,18 @@
 
 
 struct clwater_sync_task_queue *clwater_sync_task_queue_init(struct clwater_sync_task_queue *queue) {
-    __atomic_store_n(&(queue->status), ASYNC_QUEUE_INACTIVE, __ATOMIC_RELEASE);
+    __atomic_store_n(&(queue->status), SYNC_QUEUE_INACTIVE, __ATOMIC_RELEASE);
     if (sem_init(&(queue->sync.semaphore), 0, 0) < 0) {
         return NULL;
     }
     cp_queue_init(&(queue->queue));
-    __atomic_store_n(&(queue->status), ASYNC_QUEUE_READY, __ATOMIC_RELEASE);
+    __atomic_store_n(&(queue->status), SYNC_QUEUE_READY, __ATOMIC_RELEASE);
     return queue;
 }
 
 struct clwater_sync_task_queue *clwater_sync_task_queue_ruin(struct clwater_sync_task_queue *queue) {
     sem_destroy(&(queue->sync.semaphore));
-    __atomic_store_n(&(queue->status), ASYNC_QUEUE_INACTIVE, __ATOMIC_RELEASE);
+    __atomic_store_n(&(queue->status), SYNC_QUEUE_INACTIVE, __ATOMIC_RELEASE);
     return queue;
 }
 

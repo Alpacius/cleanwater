@@ -15,9 +15,9 @@ struct clwater_sync_task_queue {
 };
 
 
-#define     ASYNC_QUEUE_READY       0
-#define     ASYNC_QUEUE_INACTIVE    1
-#define     ASYNC_QUEUE_PENDING     2
+#define     SYNC_QUEUE_READY       0
+#define     SYNC_QUEUE_INACTIVE    1
+#define     SYNC_QUEUE_PENDING     2
 
 
 struct clwater_sync_task_queue *clwater_sync_task_queue_init(struct clwater_sync_task_queue *queue);

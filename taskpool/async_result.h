@@ -65,14 +65,29 @@ int clwater_async_result_poll(struct clwater_async_result *result) {
 }
 
 static inline
+void clwater_async_result_wait(struct clwater_async_result *result) {
+    if (clwater_async_result_poll(result) == ASYNC_RESULT_DONE)
+        return;
+    sem_wait(&(result->sync.semaphore));
+}
+
+static inline
+void clwater_async_result_signal(struct clwater_async_result *result) {
+    clwater_async_result_commit(result, ASYNC_RESULT_DONE);
+    sem_post(&(result->sync.semaphore));
+}
+
+static inline
 struct clwater_async_result *clwater_async_result_init(struct clwater_async_result *result) {
     __atomic_store_n(&(result->status), ASYNC_RESULT_PENDING, __ATOMIC_RELEASE);
-    result->sync.mutex = PTHREAD_MUTEX_INITIALIZER;
-    result->sync.cond = PTHREAD_COND_INITIALIZER;
+    if (sem_init(&(result->sync.semaphore), 0, 0) < 0)
+        return NULL;
+    return result;
 }
 
 static inline
 struct clwater_asunc_result *clwater_async_result_ruin(struct clwater_async_result *result) {
+    sem_destroy(&(result->sync.semaphore));
     __atomic_store_n(&(result->status), ASYNC_RESULT_PENDING, __ATOMIC_RELEASE);
 }
 
