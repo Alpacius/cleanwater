@@ -21,5 +21,6 @@ struct clwater_thread_worker {
             sem_t semaphore;
         } sync;
     } tasks;
-    struct clwater_recollector recollector;
+    uint8_t index;
+    struct clwater_recollector async_result_recollector;
 };

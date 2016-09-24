@@ -21,6 +21,7 @@ struct clwater_async_result {
         double numeric;
     } value;
     int status;
+    uint8_t from;
     struct {
         sem_t semaphore;
     } sync;
@@ -66,6 +67,7 @@ int clwater_async_result_poll(struct clwater_async_result *result) {
 
 static inline
 void clwater_async_result_wait(struct clwater_async_result *result) {
+    // XXX Assume that a result is used only once.
     if (clwater_async_result_poll(result) == ASYNC_RESULT_DONE)
         return;
     sem_wait(&(result->sync.semaphore));
@@ -78,10 +80,11 @@ void clwater_async_result_signal(struct clwater_async_result *result) {
 }
 
 static inline
-struct clwater_async_result *clwater_async_result_init(struct clwater_async_result *result) {
+struct clwater_async_result *clwater_async_result_init(struct clwater_async_result *result, uint8_t from) {
     __atomic_store_n(&(result->status), ASYNC_RESULT_PENDING, __ATOMIC_RELEASE);
     if (sem_init(&(result->sync.semaphore), 0, 0) < 0)
         return NULL;
+    result->from = from;
     return result;
 }
 
