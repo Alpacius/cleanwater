@@ -16,8 +16,8 @@ struct cp_queue {
     struct link_index buffers[2];
 };
 
-#define producer_index_of(queue_) __atomic_load_n(&((queue_)->index_producer), __ATOMIC_ACQUIRE)
-#define consumer_index_of(queue_) (1 - producer_index_of((queue_)))
+#define producer_index_of(queue_) index_mapping_[__atomic_load_n(&((queue_)->index_producer), __ATOMIC_ACQUIRE)]
+#define consumer_index_of(queue_) (1 - index_mapping_[producer_index_of((queue_))])
 #define new_consumer_index_of(queue_) \
     ({ \
         __auto_type queue__ = (queue_); \
