@@ -15,9 +15,8 @@ struct cp_queue {
 static inline
 struct link_index *cp_queue_consume(struct cp_queue *queue) {
     uint8_t index_consumer = 1 - __atomic_load_n(&(queue->index_producer), __ATOMIC_ACQUIRE), desired_producer_state = 0;
-    if (list_is_empty(&(queue->buffers[index_consumer]))) {
+    if (list_is_empty(&(queue->buffers[index_consumer])))
         __atomic_compare_exchange_n(&(queue->index_producer), &desired_producer_state, 1 - index_consumer, 0, __ATOMIC_ACQ_REL, __ATOMIC_RELAXED);
-    }
     return &(queue->buffers[index_consumer]);
 }
 
