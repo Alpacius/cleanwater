@@ -55,5 +55,6 @@ struct cp_queue *cp_queue_init(struct cp_queue *queue) {
 #undef      cp_queue_normalized_index
 #undef      cp_queue_flipped_index
 #undef      cp_queue_flipped_index_raw
+#undef      cp_queue_consumer_index
 
 #undef      cp_queue_index_of
