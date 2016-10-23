@@ -44,3 +44,12 @@ struct cp_queue *cp_queue_init(struct cp_queue *queue) {
     list_init(&(queue->buffers[0]));
     list_init(&(queue->buffers[1]));
 }
+
+#undef      CP_QUEUE_PRODUCER_BUSY
+#undef      CP_QUEUE_INITIAL_PRODUCER_INDEX
+
+#undef      cp_queue_normalized_index
+#undef      cp_queue_flipped_index
+#undef      cp_queue_flipped_index_raw
+
+#undef      cp_queue_index_of
