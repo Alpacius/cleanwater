@@ -17,15 +17,19 @@ struct cp_queue {
 #define     cp_queue_normalized_index(index_)   ((index_) & 0x1)
 #define     cp_queue_flipped_index(index_)      (1 - cp_queue_normalized_index((index_)))
 #define     cp_queue_flipped_index_raw(index_)  (1 - (index_))
+#define     cp_queue_consumer_index(queue_)     (1 - cp_queue_normalized_index((queue_)->index_producer))
 
 #define     cp_queue_index_of(queue_)           __atomic_load_n(&((queue_)->index_producer), __ATOMIC_ACQUIRE)
 
 // Beware: the consumer may fail to refresh its buffer.
 static inline
 struct link_index *cp_queue_consume(struct cp_queue *queue) {
-    uint8_t desired_index = cp_queue_normalized_index(cp_queue_index_of(queue));
-    __atomic_compare_exchange_n(&(queue->index_producer), &desired_index, cp_queue_flipped_index_raw(desired_index), 0, __ATOMIC_ACQ_REL, __ATOMIC_RELAXED);
-    return &(queue->buffers[cp_queue_flipped_index(queue->index_producer)]);
+    if (list_is_empty(&(queue->buffers[cp_queue_consumer_index(queue)]))) {
+        uint8_t desired_index = cp_queue_normalized_index(cp_queue_index_of(queue));
+        __atomic_compare_exchange_n(&(queue->index_producer), &desired_index, cp_queue_flipped_index_raw(desired_index), 0, __ATOMIC_ACQ_REL, __ATOMIC_RELAXED);
+        return &(queue->buffers[cp_queue_flipped_index(queue->index_producer)]);
+    }
+    return &(queue->buffers[cp_queue_consumer_index(queue)]);
 }
 
 static inline
